@@ -2,6 +2,7 @@
 ###### Version 1
 
 Tested boards: **[Arduino Uno](https://www.amazon.es/Tarjeta-Microcontrolador-ATmega328P-ATMEGA16U2-Compatible/dp/B01M7ZB2B4/ref=sr_1_1_sspa?keywords=arduino+uno&qid=1673210929&sprefix=arduino%2Caps%2C120&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1)**
+
 Tested screens: **[LCD ST7920 128x64](https://www.amazon.es/ST7920-128x64-12864-Pantalla-retroiluminaci%C3%B3n/dp/B07Y4RFLZ5/ref=cm_cr_arp_d_pl_foot_top?ie=UTF8)**
 
 ## Getting started
@@ -10,7 +11,7 @@ Tested screens: **[LCD ST7920 128x64](https://www.amazon.es/ST7920-128x64-12864-
 
 1. Clone this project:
 ```sh
-
+git clone https://github.com/morsoth/DIY-basic-arduino-console.git
 ```
 
 2. Add Platform.​io extension to vscode:
@@ -39,7 +40,7 @@ Tested screens: **[LCD ST7920 128x64](https://www.amazon.es/ST7920-128x64-12864-
 * Here are the header files for your peripherals. In this case `Button.h` and `Joystick.h` files already created. You can add more peripherals if your need.
 
 #### `lib/Sprites/Sprites.h`
-* Store your game sprites in this file. To learn how sprites work in this project go to "**[How sprites work](#how-sprites-work)**".
+* Store your game sprites in this file. To learn how sprites work in this project go to **[How sprites work](#how-sprites-work)**.
 
 #### `lib/Games`
 * This folder contains the `Game.h` header file and for each game you create, the corresponding `.h` and `.cpp` files (_e.g. `SpaceInvaders.h` and `SpaceInvaders.cpp`_).
@@ -49,7 +50,7 @@ Tested screens: **[LCD ST7920 128x64](https://www.amazon.es/ST7920-128x64-12864-
 Let's see the steps you have to follow to create and run you own game:
 
 1. Duplicate the `lib/Games/Demo.h` and `lib/Games/Demo.cpp` files.
-2. Rename both files with the name of your game. For this example want to create a Tetris game so we will rename both files to: `Tetris.h` and `Tetris.cpp`.
+2. Rename both files with the name of your game. For example want to a Tetris game we will rename both files to: `Tetris.h` and `Tetris.cpp`.
 3. Modify the `Tetris.h` file:
 ```cpp
 #ifndef TETRIS_H // <--
@@ -113,7 +114,7 @@ void drawSprite(const byte *spriteSheet, char sprite, int x, int y, int h, int w
 }
 ...
 ```
-The parameters that are passed are: a pointer the sprite sheet (we will later see how to create sprite sheets), the index of the sprite, the x position, the y position and the height and the width of the sprite.
+The parameters that are passed are: a pointer to the sprite sheet (we will later see how to create sprite sheets), the index of the sprite, the `x` position, the `y` position and the `height` and the `width` of the sprite.
 
 Finally there is the sprite declaration and the sprite sheet creation:
 ```cpp
@@ -141,7 +142,7 @@ const byte spaceInvadersSprites[56] = {
 In the first part we assign an index to each sprite corresponding to its index in the sprite sheet (_e.g. the first 8 chars of the array `spaceInvadersSprites` are from the `PLAYER` sprite, thats why its index is `0`_). Negative index are ignored by the `drawSprite` function thats why we assign the index `-1` to the `VOID` sprite.
 _Disclaimer: this step of defining for each sprite a `#define` with its index is totally optional but simplifies the reading when programming._
 
-In the second part we find our sprite sheet: `spaceInvadersSprites`. We declare a sprite sheet as a constant array of `byte` (same as `unsigned char`). But what do all this numbers mean? Lets take as an example the `ALIEN 3` sprite:
+In the second part we find our sprite sheet: `spaceInvadersSprites`. We declare a sprite sheet as a constant array of `bytes` (same as `unsigned chars`). But what do all this numbers mean? Lets take as an example the `ALIEN 3` sprite:
 ```cpp
 ...
     0x98, 0x5C, 0xB6, 0x5F, 0x5F, 0xB6, 0x5C, 0x98,                   // ALIEN 3
@@ -153,16 +154,21 @@ If we do the same for each `byte` we would obtain the full sprite:
 ![image]()
 
 
-**NOTE:** You can create sprite with different widths and heights. The width is determined by the `bytes` that you assign to the sprite and the height by the bits of each `byte`. Note that the height of a sprite could never be higher than 8 beacuse a `byte` has only 8 bits. If you want a sprite with less than 8 pixels of height you can simply put zeros in the most significant bits of the `byte`. You can also create sprites with different heights and widths within the same sprite sheet.
+**NOTE:** You can create sprite with different widths and heights. The width is determined by the `bytes` that you assign to the sprite and the height by the bits of each `byte`. Note that the height of a sprite could never be higher than 8 beacuse a `byte` has only 8 bits. If you want a sprite with less than 8 pixels of height you can simply put zeros in the most significant bits of the `byte`.
 
 #### Create your own sprite
 Lets add a 5x7 ghost to our project!
 
 1. Open a pixel art tool and draw your desired sprite.
-<img src=".github/imgs/ghost-drawing.png" alt="image" width="210">
+
+<img src=".github/imgs/ghost-01.png" alt="image" width="210">
+
 2. Isolate each column and put a `0` is the pixel is white and `1` if its black.
-<img src="" alt="image" width="210">
+
+<img src=".github/imgs/ghost-02.png" alt="image" width="300">
+
 3. Pass the binary number to `hex`.
+
 ```
 BIN             HEX
 1111110   ->    0x7E
@@ -171,7 +177,9 @@ BIN             HEX
 0111011   ->    0x3B
 1111110   ->    0x7E
 ```
+
 4. Add the `hex` numbers to your sprite sheet. Also create a `#define` with your new sprite and assign it the index `0`.
+
 ```cpp
 ...
 #define GHOST 0
